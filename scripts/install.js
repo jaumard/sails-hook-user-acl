@@ -15,7 +15,6 @@ if (!fs.existsSync(appDir + "/../../config/acl.js"))
 		else
 		{
 			console.log("done write acl.js base config");
-
 		}
 	});
 }
