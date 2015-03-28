@@ -1,10 +1,15 @@
 {
   "name"       : "sails-hook-user-acl",
-  "version"    : "0.0.10",
+  "version"    : "0.0.11",
   "description": "Hook to manage basic user ACL for sails application",
   "main"       : "index.js",
   "scripts": {
     "postinstall": "node scripts/install.js"
+  },
+  "author": "Jimmy Aumard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaumard/sails-hook-user-acl.git"
   },
   "devDependencies": {
     "sails": "~0.11.0"

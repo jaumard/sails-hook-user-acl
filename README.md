@@ -14,9 +14,7 @@ or on stackoverflow : http://stackoverflow.com/questions/29317329/sails-hook-rou
 
 ##Installation
     npm install sails-hook-user-acl
-or
-
-    sudo npm install sails-hook-user-acl  
+Don't use sudo or config/acl.js will be create as root user 
 
 ##Configure
 Create or modify config/acl.js : 
