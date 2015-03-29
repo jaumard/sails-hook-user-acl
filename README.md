@@ -1,16 +1,15 @@
 # sails-hook-user-acl
 Hook to manage basic user ACL
 
-#WARNING
-Currently in development
- 
 #NEED TO BE FIXED
-For now it's not working cause when I call res.forbidden() under my hook I have an error : 
+For now when I call res.forbidden() under my hook I have an error : 
 
     TypeError: Object #<ServerResponse> has no method 'view'
 See the issue https://github.com/jaumard/sails-hook-user-acl/issues/1
 
 or on stackoverflow : http://stackoverflow.com/questions/29317329/sails-hook-route-forbidden
+
+Don't know why response object doesn't have view() method.
 
 ##Installation
     npm install sails-hook-user-acl
