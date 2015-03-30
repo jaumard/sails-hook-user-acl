@@ -12,7 +12,7 @@ module.exports = function aclHook(sails)
 	var beforeRoutes = {};
 	var onForbidden  = function (req, res, resource)
 	{
-		res.status(403).send("<h1>" + req.__("Forbidden") + "</h1>");
+		res.redirect("/403");
 	};
 
 

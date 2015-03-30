@@ -1,15 +1,30 @@
 {
   "name"       : "sails-hook-user-acl",
-  "version"    : "0.0.11",
+  "version"    : "0.1.0",
   "description": "Hook to manage basic user ACL for sails application",
   "main"       : "index.js",
   "scripts": {
     "postinstall": "node scripts/install.js"
   },
   "author": "Jimmy Aumard",
+  "keywords": [
+    "sails",
+    "sails.js",
+    "sails-hook",
+    "acl",
+    "permissions",
+    "privileges",
+    "access",
+    "restriction",
+    "grant",
+    "roles",
+    "security",
+    "hook",
+    "enterprise"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jaumard/sails-hook-user-acl.git"
+    "url": "https://github.com/jaumard/sails-hook-user-acl"
   },
   "devDependencies": {
     "sails": "~0.11.0"

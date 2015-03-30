@@ -15,8 +15,8 @@ module.exports.acl = {
 	},
 	"onForbidden" : function (req, res, resource)
 	{
-		//res.redirect("/office");
-		res.status(403).send("<h1>"+req.__("Forbidden")+"</h1>");
+		res.redirect("/403");//403 need to be added under config/routes.js
+		//res.status(403).send("<h1>"+req.__("Forbidden")+"</h1>");
 	},
 	"routes" : //Additional route that are not under config/routes, can be used to protect assets files, but also rest url
 	{
