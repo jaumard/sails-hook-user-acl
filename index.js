@@ -1,6 +1,7 @@
 /**
  * Created by jaumard on 28/03/2015.
  */
+var _addResViewMethod = require("../sails/lib/hooks/views/res.view.js");
 module.exports = function aclHook(sails)
 {
 	var roles        = [];
@@ -12,7 +13,7 @@ module.exports = function aclHook(sails)
 	var beforeRoutes = {};
 	var onForbidden  = function (req, res, resource)
 	{
-		res.redirect("/403");
+		res.forbidden();
 	};
 
 
@@ -99,7 +100,11 @@ module.exports = function aclHook(sails)
 			}
 			else
 			{
-				onForbidden(req, res, resource);
+				_addResViewMethod(req, res, function ()
+				{
+					onForbidden(req, res, resource);
+				});
+
 			}
 		}
 	};

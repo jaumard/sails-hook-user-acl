@@ -19,10 +19,9 @@ Create or modify config/acl.js :
                 "roles" : ["admin"]
             }
         },
-        "onForbidden" : function (req, res, resource)//callback when user doesn't have access to a resource
+        "onForbidden" : function (req, res, resource)
         {
-            //res.redirect("/office");
-            res.status(403).send("<h1>"+req.__("Forbidden")+"</h1>");
+            res.forbidden();
         },
         "routes" : //Additional route that are not under config/routes, can be used to protect assets files, but also rest url
         {
@@ -92,12 +91,3 @@ Example under a controller :
        
     }
 
-#NEED TO BE FIXED
-For now you can't call res.forbidden() or res.view() under callback, there this error : 
-
-    TypeError: Object #<ServerResponse> has no method 'view'
-See the issue https://github.com/jaumard/sails-hook-user-acl/issues/1
-
-or on stackoverflow : http://stackoverflow.com/questions/29317329/sails-hook-route-forbidden
-
-Don't know why response object doesn't have view() method at this step.
