@@ -16,21 +16,53 @@ module.exports = function aclHook(sails)
 		res.forbidden();
 	};
 
+	var checkRouteRegEx = function (resource, routes)
+	{
+		var result = null;
+		for (var route in routes)
+		{
+			if (route.indexOf(":") != -1 || route.indexOf("*") != -1)
+			{
+				var parts = route.split(":");
+				for (var i = 1; i < parts.length - 1; i++)
+				{
+					parts[i] = "(.*)/";
+
+				}
+				parts[i]     = "(.*)";
+				var regExStr = parts.join("");
+				var regEx    = new RegExp(regExStr);
+				if (regEx.test(resource))
+				{
+					result = routes[route];
+					break;
+				}
+			}
+		}
+
+		return result;
+	};
 
 	var retrieveResource = function (resource)
 	{
 		var result = null;
-		if (typeof sails.config.routes[resource] != "undefined" && typeof sails.config.routes[resource] != "undefined")
+
+		if (typeof sails.config.routes[resource] != "undefined")
 		{
 			result = sails.config.routes[resource];
 		}
-		else if (typeof rules[resource] != "undefined" && typeof rules[resource] != "undefined")
+		else if (typeof rules[resource] != "undefined")
 		{
 			result = rules[resource];
 		}
-		else if (typeof routes[resource] != "undefined" && typeof routes[resource] != "undefined")
+		else if (typeof routes[resource] != "undefined")
 		{
 			result = routes[resource];
+		}
+		result = checkRouteRegEx(resource, routes);
+		if (result == null)
+		{
+			result = checkRouteRegEx(resource, sails.config.routes);
 		}
 		return result;
 	};
@@ -94,18 +126,24 @@ module.exports = function aclHook(sails)
 		}
 		else
 		{
-			if (req.wantsJSON)
+			_addResViewMethod(req, res, function ()
 			{
-				res.status(403).json();
-			}
-			else
-			{
-				_addResViewMethod(req, res, function ()
+				if (onForbidden == null)
+				{
+					if (req.wantsJSON)
+					{
+						res.status(403).json();
+					}
+					else
+					{
+						res.forbidden();
+					}
+				}
+				else
 				{
 					onForbidden(req, res, resource);
-				});
-
-			}
+				}
+			});
 		}
 	};
 	//For all existing route we put ACL verification

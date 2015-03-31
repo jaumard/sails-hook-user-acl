@@ -8,19 +8,44 @@ module.exports.acl = {
 	"roles"         : ["user", "admin"],//Default roles in application
 	"defaultPolicy" : "allow",//Default policy allow or deny, if no acl was define for a route or rule this is the default behavior
 	"defaultRole"   : "user",//Default role when user is not logged at all
+	"onForbidden" : function (req, res)
+	{
+		if (req.wantsJSON)
+		{
+			res.status(403).json();
+		}
+		else
+		{
+			res.forbidden();
+		}
+		console.log("forbidden");
+	},
 	"rules"         : {//Custom ACL rules if you want to check access under controller / services
 		"saveFile" : {//For example you can call sails.hook.acl.isAllow("admin", "saveFile")
 			"roles" : ["admin"]
 		}
 	},
-	"onForbidden" : function (req, res, resource)
+	"routes"      : //Additional route that are not under config/routes, can be used to protect assets files, but also rest url
 	{
-		res.forbidden();
-	},
-	"routes" : //Additional route that are not under config/routes, can be used to protect assets files, but also rest url
-	{
-		"/js/admin.js" : {//For example you can call sails.config.acl.isAllow("admin", "saveFile")
-			"roles" : ["admin"]
-		}
+		/* Examples
+		 "GET /user" : {
+		 "roles" : ["user", "admin"]
+		 },
+		 "GET /user/:id" : {
+		 "roles" : ["user", "admin"]
+		 },
+		 "POST /user" : {
+		 "roles" : ["admin"]
+		 },
+		 "PUT /user/:id" : {
+		 "roles" : ["admin"]
+		 },
+		 "DELETE /user/:id" : {
+		 "roles" : ["admin"]
+		 },
+		 "/js/admin.js"    : {
+		 "roles" : ["admin"]
+		 }
+		 */
 	}
 };
