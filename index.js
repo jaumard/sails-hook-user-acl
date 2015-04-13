@@ -59,10 +59,13 @@ module.exports = function aclHook(sails)
 		{
 			result = routes[resource];
 		}
-		result = checkRouteRegEx(resource, routes);
-		if (result == null)
+		else
 		{
-			result = checkRouteRegEx(resource, sails.config.routes);
+			result = checkRouteRegEx(resource, routes);
+			if (result == null)
+			{
+				result = checkRouteRegEx(resource, sails.config.routes);
+			}
 		}
 		return result;
 	};
