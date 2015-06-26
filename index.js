@@ -1,19 +1,26 @@
 /**
  * Created by jaumard on 28/03/2015.
  */
-var _addResViewMethod = require("../sails/lib/hooks/views/res.view.js");
+
 module.exports = function aclHook(sails)
 {
-	var roles        = [];
-	var rules        = {};
-	var routes       = {};
+	var roles  = [];
+	var rules  = {};
+	var routes = {};
 	var defaultRole;
 	var currentRole;
 	var defaultPolicy = "allow";
-	var beforeRoutes = {};
-	var onForbidden  = function (req, res, resource)
+
+	var onForbidden = function (req, res, resource)
 	{
-		res.forbidden();
+		if (req.wantsJSON)
+		{
+			res.status(403).json();
+		}
+		else
+		{
+			res.forbidden();
+		}
 	};
 
 	var checkRouteRegEx = function (resource, routes)
@@ -129,40 +136,23 @@ module.exports = function aclHook(sails)
 		}
 		else
 		{
-			_addResViewMethod(req, res, function ()
+			if (onForbidden == null)
 			{
-				if (onForbidden == null)
+				if (req.wantsJSON)
 				{
-					if (req.wantsJSON)
-					{
-						res.status(403).json();
-					}
-					else
-					{
-						res.forbidden();
-					}
+					res.status(403).json();
 				}
 				else
 				{
-					onForbidden(req, res, resource);
+					res.forbidden();
 				}
-			});
+			}
+			else
+			{
+				onForbidden(req, res, resource);
+			}
 		}
 	};
-	//For all existing route we put ACL verification
-	for (var route in  sails.config.routes)
-	{
-		beforeRoutes[route] = isRouteAllowed;
-	}
-
-	if (typeof sails.config.acl != "undefined")
-	{
-		//For all additional route we put ACL verification
-		for (var route in  sails.config.acl.routes)
-		{
-			beforeRoutes[route] = isRouteAllowed;
-		}
-	}
 
 	return {
 		// Run when sails loads-- be sure and call `next()`.
@@ -211,15 +201,32 @@ module.exports = function aclHook(sails)
 				{
 					onForbidden = sails.config.acl.onForbidden;
 				}
+				// Wait for the router to be initialized
+				sails.on('router:before', function ()
+				{
+					// Wait for the views hook to load, so that its routes get bound first
+					// (including the one that mixes in res.view)
+					sails.after('hook:views:loaded', function ()
+					{
+						// Bind your routes here
+						for (var route in  sails.config.routes)
+						{
+							sails.router.bind(route, isRouteAllowed, null, {});
+						}
+						for (var route in  sails.config.acl.routes)
+						{
+							sails.router.bind(route, isRouteAllowed, null, {});
+						}
+
+					});
+				});
+				return next();
 			}
 			else
 			{
-				sails.log.error("No config found ! Check you have config/acl.js file with default config");
+				return next("No config found ! Check you have config/acl.js file with default config");
 			}
-			return next();
-		},
-		routes     : {
-			before : beforeRoutes
+
 		},
 		isAllow    : function (role, resource)
 		{

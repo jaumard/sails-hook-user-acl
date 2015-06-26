@@ -8,7 +8,7 @@ module.exports.acl = {
 	"roles"         : ["user", "admin"],//Default roles in application
 	"defaultPolicy" : "allow",//Default policy allow or deny, if no acl was define for a route or rule this is the default behavior
 	"defaultRole"   : "user",//Default role when user is not logged at all
-	"onForbidden" : function (req, res)
+	"onForbidden" : function (req, res, resource)
 	{
 		if (req.wantsJSON)
 		{
@@ -18,7 +18,7 @@ module.exports.acl = {
 		{
 			res.forbidden();
 		}
-		console.log("forbidden");
+		sails.log.debug("forbidden");
 	},
 	"rules"         : {//Custom ACL rules if you want to check access under controller / services
 		"saveFile" : {//For example you can call sails.hook.acl.isAllow("admin", "saveFile")
