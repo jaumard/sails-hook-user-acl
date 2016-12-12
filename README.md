@@ -1,4 +1,7 @@
 # sails-hook-user-acl
+
+**DEPRECATED : NOT MAINTAINED ANYMORE** I'm using Trails now, if you want access to this repo to contribute and maintain it, please let me know.
+
 Hook to manage basic user ACL. 
 You can secure all routes (config/routes.js or rest url), define some rules to test it in your own code and secure some assets (js, css, pdf...). 
 
